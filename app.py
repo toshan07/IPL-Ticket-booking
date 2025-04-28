@@ -43,8 +43,13 @@ def check_url(match_no, home1, home2, away1, away2, loc, date):
             response = requests.get(url)
             if response.status_code != 404:
                 st.success(f"✅ URL is now accessible! Status: {response.status_code}")
-                url += "/buy-page"
-                webbrowser.open(url)  
+                
+                # Auto-redirect using HTML
+                st.markdown(f"""
+                    <meta http-equiv="refresh" content="0; url={url}/buy-page">
+                    <p>Redirecting to <a href="{url}/buy-page">Buy Page</a>...</p>
+                """, unsafe_allow_html=True)
+                
                 break
             else:
                 c += 1
@@ -53,6 +58,7 @@ def check_url(match_no, home1, home2, away1, away2, loc, date):
         except requests.RequestException as e:
             st.error(f"⚠ Error occurred: {e}")
         time.sleep(0.1)
+
 
 if start_button and not st.session_state.running:
     st.session_state.running = True
